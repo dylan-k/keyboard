@@ -85,17 +85,17 @@ ExitApp
 ; brightness up and down via F1 and F2
 ; source: https://github.com/deanhouseholder/Set-Brightness
 ; DISABLED. It may cause issues with Windows NightLight
-;#Include brightness\SetBrightness.ahk 
+; ideally F5 and 6 would control screen color temp.
+; possible source: https://github.com/tigerlily-dev/tigerlilys-Screen-Dimmer/
+;#Include brightness\SetBrightness.ahk
+; #Include gamma.ahk  
 
 ;F1 see SetBrightness.ahk above
 ;F2 see SetBrightness.ahk above
 F3:: Send {LWin down}{TAB down}{LWin up}{TAB up}
 F4:: LWin
-#Include gamma.ahk 
 ;F5::Monitor.SetGammaRamp(25, 25, 25)
 ;F6::Monitor.SetGammaRamp(100, 100, 100)
-; ideally F5 and 6 would control screen color temp.
-; possible source: https://github.com/tigerlily-dev/tigerlilys-Screen-Dimmer/
 F7::Media_Prev
 F8::Media_Play_Pause
 F9::Media_Next
@@ -103,7 +103,7 @@ F10::Volume_Mute
 F11::Volume_Down
 F12::Volume_Up
 
-; Use F1, F2, etc. keys as standard function keys via Alt key
+; Use Function key defaults by addingthe alt key
 
 ; other modifiers would work here, to avoid that.
 ; !F1::SendInput, {F1}
@@ -122,7 +122,7 @@ F12::Volume_Up
 ; use PrintScreeen key to take a snapshot, like on a mac
 ; Windows 10 uses WIN+SHIFT+S to open screenshot tool
 ; I could also set this to happen via Windows itself, using Sophia script.
-PrintScreen::Send #+s
+; PrintScreen::Send #+s
 ; #Include screenshot.ahk 
 ; Printscreen::
 ; gosub, imagename
@@ -177,7 +177,7 @@ Volume_Down:: Tab
 Volume_Up:: BackSpace
 ; Launch_App2:: Shift
 
-; applicatrion launcher shortcuts
+; application launcher shortcuts
 ; -----------------------------------------------------------------------------
 #Include shortcuts.ahk 
 
@@ -189,11 +189,12 @@ Volume_Up:: BackSpace
 
 
 
+;============================== Program Hotkeys ==============================
+; Program Hotkeys
+; keyboard shortcuts for use with specific programs
 
-; Global hotstrings
-; etc...
-
-;============================== Program 1 ==============================
+; Program 1
+; -----------------------------------------------------------------------------
 ; Evertything between here and the next #IfWinActive will ONLY work in someProgram.exe
 ; This is called being "context sensitive"
 ; #IfWinActive, ahk_exe someProgram.exe

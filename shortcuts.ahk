@@ -29,7 +29,7 @@ return
 
 ; control+alt+a to make a new todoist task
 ^!a::
-  Run, C:\Users\Dylan\AppData\Local\Programs\todoist\Todoist.exe
+  Run, C:\Users\Dylan\AppData\Local\Todoist\WindowsDesktopApp\Todoist.exe
   WinWait, ahk_exe Todoist.exe ;Waits until the specified window exists.
   WinActivate, ahk_exe Todoist.exe ;Activate existing window (just in case)
   WinWaitActive, ahk_exe Todoist.exe ;wait for activation...

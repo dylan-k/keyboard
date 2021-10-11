@@ -1,10 +1,38 @@
-; Set Brightness
-; by GitHub user deanhouseholder
-; https://github.com/deanhouseholder/Set-Brightness
+; ==============================================================================
+; Name ..........: Set Brightness
+; Description ...: Control screen brightness using keyboard shortcuts
+; Version .......: Forked from 1.2 (Dec 12, 2016)
+; Platform ......: Windows 10
+; Language ......: English (en-US)
+; Author ........: @deanhouseholder
+; Source ........: https://github.com/deanhouseholder/Set-Brightness
+; ==============================================================================
+
+
+
+
+; ==============================================================================
+; Configuration
+; ==============================================================================
+
 #Persistent
 #SingleInstance, Force
 #NoEnv
+
+
+
+
+; ==============================================================================
+; TRAY ICON 
+; ==============================================================================
 IfEqual, A_IsCompiled, , Menu, Tray, Icon, %A_ScriptDir%\SetBrightness.ico
+
+
+
+; ==============================================================================
+; VARIABLES AND FUNCTIONS
+; ==============================================================================
+
 Bright := 100
 
 ShowBanner(Bright)
@@ -72,6 +100,12 @@ ChangeBrightness(Bright)
 }
 
 
+
+
+; ==============================================================================
+; SHORTCUTS
+; ==============================================================================
+
 F1::
 	Bright := Bright - 10
 	If (Bright < 0) {
@@ -92,8 +126,6 @@ Return
 
 
 ; Use F1, F2, etc. keys as standard function keys via Alt key
-; of course this kills the default alt+f4 but i don't use that
-; other modifiers would work here too.
 !F1::SendInput, {F1}
 !F2::SendInput, {F2}
 ; !F3::SendInput, {F3}

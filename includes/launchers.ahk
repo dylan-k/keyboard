@@ -49,14 +49,14 @@ return
 ; ------------------------------------------------------------------------------
 
 ; Launch Todoist with control+alt+a and make a new todoist task
-; This one can be buggy. Alternative methods available online.
-^!a::
-  Run, C:\Users\%A_UserName%\AppData\Local\Todoist\WindowsDesktopApp\Todoist.exe
-  WinWait, ahk_exe Todoist.exe ;Waits until the specified window exists.
-  WinActivate, ahk_exe Todoist.exe ;Activate existing window (just in case)
-  WinWaitActive, ahk_exe Todoist.exe ;wait for activation...
-  Send, q
-return
+; New version of todoist can FINALLY do this by itself.
+; ^!a::
+;   Run, C:\Users\%A_UserName%\AppData\Local\Todoist\WindowsDesktopApp\Todoist.exe
+;   WinWait, ahk_exe Todoist.exe ;Waits until the specified window exists.
+;   WinActivate, ahk_exe Todoist.exe ;Activate existing window (just in case)
+;   WinWaitActive, ahk_exe Todoist.exe ;wait for activation...
+;   Send, q
+; return
 
 
 ; Outlook

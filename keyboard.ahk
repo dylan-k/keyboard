@@ -101,6 +101,14 @@ ExitApp
 #IfWinActive
 
 
+; Always on Top 
+; ------------------------------------------------------------------------------
+; stick” any window to  foreground of desktop with a simple keyboard shortcut.
+; source: https://www.labnol.org/software/tutorials/keep-window-always-on-top/5213/
+; to use it, while this script is running, click a window, then do control+space
+; control+space again will un-stick the window.
+ ^SPACE::  Winset, Alwaysontop, , A
+
 
 
 ; ==============================================================================
@@ -229,6 +237,7 @@ Return
 ; =============================================================================
 ; Experimental 
 ; =============================================================================
+
 
 
 ;============================== Program Hotkeys ==============================

@@ -6,8 +6,13 @@
 ; Author ........: Dylan Kinnett <dylan@nocategories.net>
 ; ==============================================================================
 
-
-
+; CHEATSHEET
+; ! = ALT KEY
+; ^ = CONTROL KEY
+; # = WINDOWS KEY
+; + = SHIFT KEY
+; https://www.autohotkey.com/docs/Hotkeys.htm
+; https://www.autohotkey.com/docs/KeyList.htm
 
 ; ==============================================================================
 ; TRAY ICON 
@@ -151,7 +156,9 @@ F12::Volume_Up
 ~!F12::SendInput, {F12}
 
 ; customize row above numpad, from left to right
-; keycodes vary among different keyboars, if they have these keys at all
+; keycodes vary among different keyboards, if they have these keys at all
+; Here are keycodes for my keyboard, made by IKBC Company, model MF108
+; for each key above numpad, moving left to right...
 ; VK    SC    Type  Key   
 ; ----------------------------------
 ; AD    120   a     Volume_Mute
@@ -164,11 +171,20 @@ F12::Volume_Up
 ; maybe this helps?
 ; https://autohotkey.com/board/topic/30842-physical-state-of-media-keys-not-detected-by-getkeystate/
 
-; from left to right...
-Volume_Mute:: Esc
-Volume_Down:: Tab
-Volume_Up:: BackSpace
-; Launch_App2:: Shift
+; makes sense to map "up" to "next" etc.
+LAlt & Volume_Mute:: Media_Play_Pause
+LAlt & Volume_Down:: Media_Prev
+LAlt & Volume_Up:: Media_Next
+
+; when working with data...
+LShift & Volume_Mute:: Esc
+LShift & Volume_Down:: Tab
+LShift & Volume_Up:: BackSpace
+
+
+; app launcher for very common apps: notes, calculator, etc.
+LAlt & Launch_App2:: Run, C:\Users\Dylan\AppData\Local\Obsidian\Obsidian.exe, C:\Users\Dylan\AppData\Local\Obsidian
+Launch_App2:: Run, calc.exe
 
 
 ; Screenshots
@@ -225,6 +241,12 @@ WinGetTitle,Title,A
 If Title !=
 WinClose,A
 Return
+
+;use alt+win to force-restart windows explorer
+LAlt & LWin::
+RunWait taskkill /F /IM explorer.exe 
+Run explorer.exe
+return
 
 
 ; App Launch Shortcuts

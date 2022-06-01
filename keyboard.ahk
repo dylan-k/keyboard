@@ -6,11 +6,16 @@
 ; Author ........: Dylan Kinnett <dylan@nocategories.net>
 ; ==============================================================================
 
-
-
+; CHEATSHEET
+; ! = ALT KEY
+; ^ = CONTROL KEY
+; # = WINDOWS KEY
+; + = SHIFT KEY
+; https://www.autohotkey.com/docs/Hotkeys.htm
+; https://www.autohotkey.com/docs/KeyList.htm
 
 ; ==============================================================================
-; TRAY ICON 
+; TRAY ICON
 ; ==============================================================================
 
 I_Icon = keyboard.ico
@@ -91,15 +96,23 @@ return
 return
 ; Removes any popped up tray tips.
 RemoveTrayTip:
-	SetTimer, RemoveTrayTip, Off 
-	TrayTip 
-return 
+	SetTimer, RemoveTrayTip, Off
+	TrayTip
+return
 ; Hard exit that just closes the script
 ^Esc::
 ExitApp
-#UseHook 
+#UseHook
 #IfWinActive
 
+
+; Always on Top
+; ------------------------------------------------------------------------------
+; stick” any window to  foreground of desktop with a simple keyboard shortcut.
+; source: https://www.labnol.org/software/tutorials/keep-window-always-on-top/5213/
+; to use it, while this script is running, click a window, then do control+space
+; control+space again will un-stick the window.
+ ^SPACE::  Winset, Alwaysontop, , A
 
 
 
@@ -143,24 +156,35 @@ F12::Volume_Up
 ~!F12::SendInput, {F12}
 
 ; customize row above numpad, from left to right
-; keycodes vary among different keyboars, if they have these keys at all
-; VK    SC    Type  Key   
+; keycodes vary among different keyboards, if they have these keys at all
+; Here are keycodes for my keyboard, made by IKBC Company, model MF108
+; for each key above numpad, moving left to right...
+; VK    SC    Type  Key
 ; ----------------------------------
 ; AD    120   a     Volume_Mute
-; AE    12E   a     Volume_Down  
-; AF    130   a     Volume_Up 
-; B7    121   a     Launch_App2     
+; AE    12E   a     Volume_Down
+; AF    130   a     Volume_Up
+; B7    121   a     Launch_App2
 ; https://stackoverflow.com/questions/62918955/can-autohotkey-remap-media-key-combos
 ; would love to use the launch key as a modifier for the others
 ; but this doesn't work. a bug in AutoHotKey & nobody cares.
 ; maybe this helps?
 ; https://autohotkey.com/board/topic/30842-physical-state-of-media-keys-not-detected-by-getkeystate/
 
-; from left to right...
-Volume_Mute:: Esc
-Volume_Down:: Tab
-Volume_Up:: BackSpace
-; Launch_App2:: Shift
+; makes sense to map "up" to "next" etc.
+LAlt & Volume_Mute:: Media_Play_Pause
+LAlt & Volume_Down:: Media_Prev
+LAlt & Volume_Up:: Media_Next
+
+; when working with data...
+LShift & Volume_Mute:: Esc
+LShift & Volume_Down:: Tab
+LShift & Volume_Up:: BackSpace
+
+
+; app launcher for very common apps: notes, calculator, etc.
+LAlt & Launch_App2:: Run, C:\Users\Dylan\AppData\Local\Obsidian\Obsidian.exe, C:\Users\Dylan\AppData\Local\Obsidian
+Launch_App2:: Run, calc.exe
 
 
 ; Screenshots
@@ -168,13 +192,13 @@ Volume_Up:: BackSpace
 
 ; Goal is for Print Screen key to take a screenshot, save it to desktop
 ; A modifier key should add option to grab a selection for the screenshot
-; Screenshots should happen with no other input required. 
+; Screenshots should happen with no other input required.
 ; Windows doesn't make this as simple as it shold be
 ; Alternatives include GreenShot and Sophic script
 
 ; Use Windows 10's WIN+SHIFT+S to open screenshot tool
 ; PrintScreen::Send #+s
-; #Include includes\screenshot.ahk 
+; #Include includes\screenshot.ahk
 ; Printscreen::
 ; gosub, imagename
 ; CaptureScreen(0,false,imagesavename)
@@ -184,7 +208,7 @@ Volume_Up:: BackSpace
 ; gosub, imagename
 ; CaptureScreen(2,false,imagesavename)
 ; return
-   
+
 ; +Printscreen::
 ; gosub, imagename
 ; CaptureScreen("0,0,1680,1050",false,imagesavename)
@@ -204,7 +228,7 @@ Volume_Up:: BackSpace
 ; Sometimes, however, "copy" shortcut conflicts with "stop"
 ; didn't choose "End" for "stop" because i use that for "go to end of line".
 ; Use pause/break key for "stop" command, for terminals
-Pause::^c 
+Pause::^c
 
 
 ; Global Shortcuts
@@ -218,17 +242,24 @@ If Title !=
 WinClose,A
 Return
 
+;use alt+win to force-restart windows explorer
+LAlt & LWin::
+RunWait taskkill /F /IM explorer.exe
+Run explorer.exe
+return
+
 
 ; App Launch Shortcuts
 ; ------------------------------------------------------------------------------
-#Include includes\launchers.ahk 
+#Include includes\launchers.ahk
 
 
 
 
 ; =============================================================================
-; Experimental 
+; Experimental
 ; =============================================================================
+
 
 
 ;============================== Program Hotkeys ==============================
@@ -243,6 +274,53 @@ Return
 ; #IfWinActive, ahk_exe someProgram.exe
 ; whatever shortcut(s) go here...
 ; #IfWinActive
+
+
+; Zoom
+; -----------------------------------------------------------------------------
+
+#IfWinActive, ahk_exe Zoom.exe
+; A system-wide mute toggle for Zoom Meetings.
+; adapted from https://tsmith.com/blog/2017/zoom-autohotkey-mute/
+; In Zoom settings, set microphone to mute by default
+; With this shortcut, if the "scroll lock" light in ON, it means mic is on.
+
+  Scrolllock::
+    ; Zoom appears not to accept ControlSend when in the background, so
+    ; we isolate the Zoom and current windows, switch over to Zoom, send
+    ; its own mute-toggle hotkey, and then switch back.
+    ;
+    ; Get the current window
+    WinGet, active_window, ID, A
+    ;
+    ; First check if we're sharing our screen and capture the toolbar:
+    zoom_window := WinExist("ahk_class ZPFloatToolbarClass")
+    ;
+    ; If we aren't sharing our screen, pull the Zoom window:
+    if (zoom_window = "0x0") {
+        zoom_window := WinExist("ahk_class ZPContentViewWndClass")
+    }
+    ;
+    ; Do we know we have a zoom_window? If not, bail.
+    if (zoom_window = "0x0") {
+        Send {F9}
+        return
+    }
+    ;
+    ; Whichever we have, switch over to it:
+    WinActivate, ahk_id %zoom_window%
+    ;
+    ; Toggle Mute
+    Send !a
+    ;
+    ; Go back
+    WinActivate ahk_id %active_window%
+  Return
+#IfWinActive
+
+
+
+
 
 
 ;============================== ini Section ==============================

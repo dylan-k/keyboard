@@ -15,7 +15,7 @@
 ; https://www.autohotkey.com/docs/KeyList.htm
 
 ; ==============================================================================
-; TRAY ICON 
+; TRAY ICON
 ; ==============================================================================
 
 I_Icon = keyboard.ico
@@ -89,24 +89,24 @@ return
 #IfWinActive, ahk_group saveReload
 ; Use Control+S to save your script and reload it at the same time.
 ~^s::
-	TrayTip, Reloading updated script, %A_ScriptName%
-	SetTimer, RemoveTrayTip, 1500
-	Sleep, 1750
-	Reload
+  TrayTip, Reloading updated script, %A_ScriptName%
+  SetTimer, RemoveTrayTip, 1500
+  Sleep, 1750
+  Reload
 return
 ; Removes any popped up tray tips.
 RemoveTrayTip:
-	SetTimer, RemoveTrayTip, Off 
-	TrayTip 
-return 
+  SetTimer, RemoveTrayTip, Off
+  TrayTip
+return
 ; Hard exit that just closes the script
 ^Esc::
 ExitApp
-#UseHook 
+#UseHook
 #IfWinActive
 
 
-; Always on Top 
+; Always on Top
 ; ------------------------------------------------------------------------------
 ; stick” any window to  foreground of desktop with a simple keyboard shortcut.
 ; source: https://www.labnol.org/software/tutorials/keep-window-always-on-top/5213/
@@ -159,12 +159,12 @@ F12::Volume_Up
 ; keycodes vary among different keyboards, if they have these keys at all
 ; Here are keycodes for my keyboard, made by IKBC Company, model MF108
 ; for each key above numpad, moving left to right...
-; VK    SC    Type  Key   
+; VK    SC    Type  Key
 ; ----------------------------------
 ; AD    120   a     Volume_Mute
-; AE    12E   a     Volume_Down  
-; AF    130   a     Volume_Up 
-; B7    121   a     Launch_App2     
+; AE    12E   a     Volume_Down
+; AF    130   a     Volume_Up
+; B7    121   a     Launch_App2
 ; https://stackoverflow.com/questions/62918955/can-autohotkey-remap-media-key-combos
 ; would love to use the launch key as a modifier for the others
 ; but this doesn't work. a bug in AutoHotKey & nobody cares.
@@ -192,13 +192,13 @@ Launch_App2:: Run, calc.exe
 
 ; Goal is for Print Screen key to take a screenshot, save it to desktop
 ; A modifier key should add option to grab a selection for the screenshot
-; Screenshots should happen with no other input required. 
+; Screenshots should happen with no other input required.
 ; Windows doesn't make this as simple as it shold be
 ; Alternatives include GreenShot and Sophic script
 
 ; Use Windows 10's WIN+SHIFT+S to open screenshot tool
 ; PrintScreen::Send #+s
-; #Include includes\screenshot.ahk 
+; #Include includes\screenshot.ahk
 ; Printscreen::
 ; gosub, imagename
 ; CaptureScreen(0,false,imagesavename)
@@ -208,7 +208,7 @@ Launch_App2:: Run, calc.exe
 ; gosub, imagename
 ; CaptureScreen(2,false,imagesavename)
 ; return
-   
+
 ; +Printscreen::
 ; gosub, imagename
 ; CaptureScreen("0,0,1680,1050",false,imagesavename)
@@ -228,7 +228,7 @@ Launch_App2:: Run, calc.exe
 ; Sometimes, however, "copy" shortcut conflicts with "stop"
 ; didn't choose "End" for "stop" because i use that for "go to end of line".
 ; Use pause/break key for "stop" command, for terminals
-Pause::^c 
+Pause::^c
 
 
 ; Global Shortcuts
@@ -244,20 +244,24 @@ Return
 
 ;use alt+win to force-restart windows explorer
 LAlt & LWin::
-RunWait taskkill /F /IM explorer.exe 
+RunWait taskkill /F /IM explorer.exe
 Run explorer.exe
 return
 
 
 ; App Launch Shortcuts
 ; ------------------------------------------------------------------------------
-#Include includes\launchers.ahk 
+#Include includes\launchers.ahk
 
 
+; Shift+Esc Keybind to Power Down Monitor(s)
+; settings: includes\PushMonitOff\PushMonitOff.ini
+; ------------------------------------------------------------------------------
+#Include includes\PushMonitOff\PushMonitOff.ahk
 
 
 ; =============================================================================
-; Experimental 
+; Experimental
 ; =============================================================================
 
 
@@ -315,6 +319,7 @@ return
     WinActivate ahk_id %active_window%
   Return
 #IfWinActive
+
 
 ;============================== ini Section ==============================
 ; Do not remove /* or */ from this section. Only modify if you're

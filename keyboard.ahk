@@ -20,11 +20,8 @@
 
 I_Icon = keyboard.ico
 IfExist, %I_Icon%
-Menu, Tray, Icon, %I_Icon%
+  Menu, Tray, Icon, %I_Icon%
 ;return
-
-
-
 
 ; ==============================================================================
 ; Configuration
@@ -36,9 +33,9 @@ Menu, Tray, Icon, %I_Icon%
 ; Always run as admin
 if not A_IsAdmin
 {
-   Run *RunAs "%A_ScriptFullPath%"
-   ; Requires v1.0.92.01+
-   ExitApp
+  Run *RunAs "%A_ScriptFullPath%"
+  ; Requires v1.0.92.01+
+  ExitApp
 }
 
 ; Keep permanently running
@@ -73,39 +70,31 @@ GroupAdd, saveReload, %A_ScriptName%
 
 return
 
-
-
-
-
-
-
 ; ==============================================================================
 ; FUNCTIONS
 ; ==============================================================================
-
 
 ; Save Reload / Quick Stop
 ; ------------------------------------------------------------------------------
 
 #IfWinActive, ahk_group saveReload
-; Use Control+S to save your script and reload it at the same time.
-~^s::
-  TrayTip, Reloading updated script, %A_ScriptName%
-  SetTimer, RemoveTrayTip, 1500
-  Sleep, 1750
-  Reload
-return
-; Removes any popped up tray tips.
-RemoveTrayTip:
-  SetTimer, RemoveTrayTip, Off
-  TrayTip
-return
-; Hard exit that just closes the script
-^Esc::
-ExitApp
-#UseHook
+  ; Use Control+S to save your script and reload it at the same time.
+  ~^s::
+    TrayTip, Reloading updated script, %A_ScriptName%
+    SetTimer, RemoveTrayTip, 1500
+    Sleep, 1750
+    Reload
+  return
+  ; Removes any popped up tray tips.
+  RemoveTrayTip:
+    SetTimer, RemoveTrayTip, Off
+    TrayTip
+  return
+  ; Hard exit that just closes the script
+  ^Esc::
+  ExitApp
+  #UseHook
 #IfWinActive
-
 
 ; Always on Top
 ; ------------------------------------------------------------------------------
@@ -113,14 +102,11 @@ ExitApp
 ; source: https://www.labnol.org/software/tutorials/keep-window-always-on-top/5213/
 ; to use it, while this script is running, click a window, then do control+space
 ; control+space again will un-stick the window.
- ^SPACE::  Winset, Alwaysontop, , A
-
-
+^SPACE::  Winset, Alwaysontop, , A
 
 ; ==============================================================================
 ; MAIN SCRIPT
 ; ==============================================================================
-
 
 ; Function Keys
 ; ------------------------------------------------------------------------------
@@ -182,11 +168,9 @@ LShift & Volume_Mute:: Esc
 LShift & Volume_Down:: Tab
 LShift & Volume_Up:: BackSpace
 
-
 ; app launcher for very common apps: notes, calculator, etc.
 LAlt & Launch_App2:: Run, C:\Users\Dylan\AppData\Local\Obsidian\Obsidian.exe, C:\Users\Dylan\AppData\Local\Obsidian
 Launch_App2:: Run, calc.exe
-
 
 ; Screenshots
 ; ------------------------------------------------------------------------------
@@ -221,7 +205,6 @@ Launch_App2:: Run, calc.exe
 ; imagesavename=C:\Users\%A_UserName%\Desktop\screenshot_%count%.jpg
 ; return
 
-
 ; Terminal Applications
 ; ------------------------------------------------------------------------------
 
@@ -231,47 +214,42 @@ Launch_App2:: Run, calc.exe
 ; Use pause/break key for "stop" command, for terminals
 Pause::^c
 
-
 ; Global Shortcuts
 ; ------------------------------------------------------------------------------
 
 ;use control+q to quit any application
 ;but don't quit explorer.exe
-^q::
-WinGetTitle,Title,A
-If Title !=
-WinClose,A
-Return
+; ^q::
+; WinGetTitle,Title,A
+; TODO: This guard only skips untitled windows, so Explorer still closes. Update to check explorer.exe explicitly.
+; If Title !=
+; WinClose,A
+; Return
 
 ;use alt+win to force-restart windows explorer
 LAlt & LWin::
-RunWait taskkill /F /IM explorer.exe
-Run explorer.exe
+  RunWait taskkill /F /IM explorer.exe
+  Run explorer.exe
 return
-
 
 ; App Launch Shortcuts
 ; ------------------------------------------------------------------------------
 #Include includes\launchers.ahk
 
-
 ; Shift+Esc Keybind to Power Down Monitor(s)
 ; https://superuser.com/a/1039249/236141
 ; ------------------------------------------------------------------------------
 +Esc::  ; hotkey that turns off the monitor.
-Sleep 1000  ; Give user a chance to release keys (in case their release would wake up the monitor again).
-; Turn Monitor Off:
-SendMessage, 0x112, 0xF170, 2,, Program Manager  ; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.
+  Sleep 1000  ; Give user a chance to release keys (in case their release would wake up the monitor again).
+  ; Turn Monitor Off:
+  SendMessage, 0x112, 0xF170, 2,, Program Manager  ; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.
 ; Note for the above: Use -1 in place of 2 to turn the monitor on.
 ; Use 1 in place of 2 to activate the monitor's low-power mode.
 return
 
-
 ; =============================================================================
 ; Experimental
 ; =============================================================================
-
-
 
 ;============================== Program Hotkeys ==============================
 ; Program Hotkeys
@@ -302,62 +280,63 @@ DetectHiddenWindows, On
 WaitTime := 1100 ; Adjust this time if the script is not working on program startup
 
 ;--Shortkey code--
+; TODO: %Title% is undefined, so these activate/minimize branches probably never run as intended.
+; TODO: Replace the fixed WaitTime sleep with WinWait logic tuned for the current Todoist app.
 
 ; Open Todoist with alt+ctrl+t shortcut
 !^t::
 
-Process, Exist, Todoist.exe
-IfWinNotExist, ahk_exe Todoist.exe
-{
+  Process, Exist, Todoist.exe
+  IfWinNotExist, ahk_exe Todoist.exe
+  {
     Run, shell:AppsFolder\com.todoist
     return
-}
-else
-{
+  }
+  else
+  {
     IfWinActive, %Title%
-        WinMinimize, %Title%
-    else
-        Run, shell:AppsFolder\com.todoist
-}
+      WinMinimize, %Title%
+else
+  Run, shell:AppsFolder\com.todoist
+  }
 return
 
 ; Open todoist and add task shortcut
 !^a::
 
-Process, Exist, Todoist.exe
-IfWinNotExist, ahk_exe Todoist.exe
-{
-        RunWait, shell:AppsFolder\com.todoist
+  Process, Exist, Todoist.exe
+  IfWinNotExist, ahk_exe Todoist.exe
+  {
+    RunWait, shell:AppsFolder\com.todoist
     sleep, WaitTime ; Waits for Todoist to load
-      WinActivate, %Title%
+    WinActivate, %Title%
     {
       send, {q}
       return
     }
-}
-else
-{
+  }
+  else
+  {
     IfWinActive, %Title%
-        WinMinimize, %Title%
-    else
-        Run, shell:AppsFolder\com.todoist
+      WinMinimize, %Title%
+else
+  Run, shell:AppsFolder\com.todoist
     sleep, WaitTime ; Waits for Todoist to load
-      WinActivate, %Title%
+    WinActivate, %Title%
     {
       send, {q}
       return
     }
-}
+  }
 return
-
 
 ; Zoom
 ; -----------------------------------------------------------------------------
 #IfWinActive, ahk_exe Zoom.exe
-; A system-wide mute toggle for Zoom Meetings.
-; adapted from https://tsmith.com/blog/2017/zoom-autohotkey-mute/
-; In Zoom settings, set microphone to mute by default
-; With this shortcut, if the "scroll lock" light in ON, it means mic is on.
+  ; A system-wide mute toggle for Zoom Meetings.
+  ; adapted from https://tsmith.com/blog/2017/zoom-autohotkey-mute/
+  ; In Zoom settings, set microphone to mute by default
+  ; With this shortcut, if the "scroll lock" light in ON, it means mic is on.
 
   Scrolllock::
     ; Zoom appears not to accept ControlSend when in the background, so
@@ -372,13 +351,13 @@ return
     ;
     ; If we aren't sharing our screen, pull the Zoom window:
     if (zoom_window = "0x0") {
-        zoom_window := WinExist("ahk_class ZPContentViewWndClass")
+      zoom_window := WinExist("ahk_class ZPContentViewWndClass")
     }
     ;
     ; Do we know we have a zoom_window? If not, bail.
     if (zoom_window = "0x0") {
-        Send {F9}
-        return
+      Send {F9}
+      return
     }
     ;
     ; Whichever we have, switch over to it:
@@ -391,7 +370,6 @@ return
     WinActivate ahk_id %active_window%
   Return
 #IfWinActive
-
 
 ;============================== ini Section ==============================
 ; Do not remove /* or */ from this section. Only modify if you're
